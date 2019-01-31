@@ -1,6 +1,6 @@
 {
   "name": "react-native-text-input-mask",
-  "version": "0.8.1",
+  "version": "0.8.3",
   "description": "Text input mask for React Native.",
   "main": "index.js",
   "repository": {
