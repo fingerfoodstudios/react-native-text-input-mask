@@ -39,7 +39,7 @@ import UIKit
 @IBDesignable
 open class MaskedTextFieldDelegate: NSObject, UITextFieldDelegate {
 
-    open weak var listener: MaskedTextFieldDelegateListener?
+    @objc open weak var listener: MaskedTextFieldDelegateListener?
     open var onMaskedTextChangedCallback: ((_ textField: UITextField, _ value: String, _ complete: Bool) -> ())?
     
     @IBInspectable open var primaryMaskFormat: String
