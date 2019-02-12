@@ -68,7 +68,7 @@ public class RNTextInputMaskModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setMask(final int tag, final String mask, final boolean forceCapitals) {
+    public void setMask(final int tag, final String mask, final boolean forceCapitals, final boolean autoCompleteOnFocus) {
         // We need to use prependUIBlock instead of addUIBlock since subsequent UI operations in
         // the queue might be removing the view we're looking to update.
         reactContext.getNativeModule(UIManagerModule.class).prependUIBlock(new UIBlock() {

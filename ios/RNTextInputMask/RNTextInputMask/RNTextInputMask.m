@@ -39,7 +39,7 @@ RCT_EXPORT_METHOD(unmask:(NSString *)maskString inputValue:(NSString *)inputValu
     onResult(@[output]);
 }
 
-RCT_EXPORT_METHOD(setMask:(nonnull NSNumber *)reactNode mask:(NSString *)mask forceCapitals:(BOOL) forceCapitals) {
+RCT_EXPORT_METHOD(setMask:(nonnull NSNumber *)reactNode mask:(NSString *)mask forceCapitals:(BOOL) forceCapitals autoCompleteOnFocus:(BOOL) autoCompleteOnFocus) {
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, RCTSinglelineTextInputView *> *viewRegistry ) {
         dispatch_async(dispatch_get_main_queue(), ^{
             RCTSinglelineTextInputView *view = viewRegistry[reactNode];
@@ -57,6 +57,7 @@ RCT_EXPORT_METHOD(setMask:(nonnull NSNumber *)reactNode mask:(NSString *)mask fo
                 maskedDelegate = [[MaskedTextFieldDelegate alloc] init];
             }
             [maskedDelegate setPrimaryMaskFormat: mask];
+            [maskedDelegate setAutocompleteOnFocus: autoCompleteOnFocus];
             masks[key] = maskedDelegate;
             [masks[key] setListener:self];
             textView.delegate = masks[key];
@@ -95,6 +96,15 @@ RCT_EXPORT_METHOD(setText:(nonnull NSNumber *)reactNode text:(NSString *)text){
 }
 
 - (void)textFieldDidEndEditing:(RCTUITextField *)textField
+{
+    [self.bridge.eventDispatcher sendTextEventWithType:RCTTextEventTypeBlur
+                                              reactTag:[[textField reactSuperview] reactTag]
+                                                  text:textField.attributedText.string
+                                                   key:nil
+                                            eventCount:1];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField reason:(UITextFieldDidEndEditingReason)reason
 {
     [self.bridge.eventDispatcher sendTextEventWithType:RCTTextEventTypeBlur
                                               reactTag:[[textField reactSuperview] reactTag]

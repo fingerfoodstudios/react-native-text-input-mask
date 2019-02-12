@@ -18,6 +18,7 @@ export default class TextInputMask extends Component {
     maskDefaultValue: true,
     autoComplete: true,
     forceCapitals: false,
+    autoCompleteOnFocus: true,
   }
 
   masked = false
@@ -36,7 +37,7 @@ export default class TextInputMask extends Component {
 
     if (this.props.mask && !this.masked) {
       this.masked = true
-      setMask(findNodeHandle(this.input), this.props.mask, this.props.forceCapitals)
+      setMask(findNodeHandle(this.input), this.props.mask, this.props.forceCapitals, this.props.autoCompleteOnFocus)
     }
   }
 
@@ -60,7 +61,7 @@ export default class TextInputMask extends Component {
     }
 
     if (this.props.mask !== nextProps.mask || this.props.forceCapitals !== nextProps.forceCapitals) {
-      setMask(findNodeHandle(this.input), nextProps.mask, nextProps.forceCapitals)
+      setMask(findNodeHandle(this.input), nextProps.mask, nextProps.forceCapitals, nextProps.autoCompleteOnFocus)
     }
   }
 
@@ -94,10 +95,12 @@ export default class TextInputMask extends Component {
             masked,
             this.props.autoComplete,
             unmasked => {
-              this.props.onChangeText && this.props.onChangeText(masked, unmasked)
+              if (this.props.value !== masked) {
+                this.props.onChangeText && this.props.onChangeText(masked, unmasked)
+              }
             },
           )
-        } else {
+        } else if (this.props.value !== masked) {
           this.props.onChangeText && this.props.onChangeText(masked)
         }
       }}
